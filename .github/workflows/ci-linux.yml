@@ -1,6 +1,12 @@
 name: CI (Linux)
 
 on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to build'
+        default: 'npu_hle'
+        required: true
   push:
     paths:
     - '.github/workflows/**'
@@ -45,6 +51,7 @@ jobs:
     - uses: actions/checkout@main
       with:
         fetch-depth: 0
+        ref: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.branch || github.ref }}
     - name: Install dependencies
       run: |
         sudo apt-get update
